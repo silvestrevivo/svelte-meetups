@@ -76,7 +76,7 @@
 <article>
   <header>
     <h1>
-      {title}
+       {title}
       {#if isFav}
         <Badge>FAVORITE</Badge>
       {/if}
@@ -91,13 +91,14 @@
     <p>{description}</p>
   </div>
   <footer>
-    <Button href="mailto:{email}" caption="Contact" />
+    <Button href="mailto:{email}">Contact</Button>
     <Button
       type="button"
-      caption={isFav ? 'Unfavorite' : 'Favorite'}
       mode="outline"
       color={isFav ? null : 'success'}
-      on:click={() => dispatch('toggleFavorite', id)} />
-    <Button type="button" caption="Show Details" />
+      on:click={() => dispatch('toggleFavorite', id)}>
+       {isFav ? 'Unfavorite' : 'Favorite'}
+    </Button>
+    <Button type="button">Show Details</Button>
   </footer>
 </article>
