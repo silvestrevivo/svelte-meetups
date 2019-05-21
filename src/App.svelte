@@ -20,7 +20,8 @@
       imageUrl:
         "http://blog.hackerrank.com/wp-content/uploads/2014/08/Bootcamp.jpg",
       address: "27th Nerd Road, 1913LC Sevilla",
-      contactEmail: "silvestre@hotmail.com"
+      contactEmail: "silvestre@hotmail.com",
+      isFavorite: false
     },
     {
       id: "m2",
@@ -30,7 +31,8 @@
       imageUrl:
         "http://lahinchseaworld.com/wp-content/uploads/2013/07/swimming-lesson.jpg",
       address: "27th Nerd Road, 1913LC Castilleja",
-      contactEmail: "swim@hotmail.com"
+      contactEmail: "swim@hotmail.com",
+      isFavorite: false
     }
   ];
 
@@ -46,6 +48,16 @@
     };
 
     meetups = [...meetups, newMeetup];
+  }
+
+  function toggleFavorite(event) {
+    const id = event.detail;
+    const updatedMeetup = { ...meetups.find(m => m.id === id) };
+    updatedMeetup.isFavorite = !updatedMeetup.isFavorite;
+    const meetupIndex = meetups.findIndex(m => m.id === id);
+    const updatedMeetups = [...meetups];
+    updatedMeetups[meetupIndex] = updatedMeetup;
+    meetups = updatedMeetups;
   }
 </script>
 
@@ -99,5 +111,5 @@
       on:input={event => (description = event.target.value)} />
     <Button type="submit" caption="Save" />
   </form>
-  <MeetupGrid {meetups} />
+  <MeetupGrid {meetups} on:toggleFavorite={toggleFavorite} />
 </main>
