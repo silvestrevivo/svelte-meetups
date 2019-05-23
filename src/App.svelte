@@ -33,8 +33,14 @@
   ];
 
   function addMeetup(event) {
-    console.log("evente", event);
-    const { title, subtitle, email, description, address } = event.detail;
+    const {
+      title,
+      subtitle,
+      email,
+      description,
+      address,
+      imageUrl
+    } = event.detail;
     const newMeetup = {
       id: Math.random().toString(),
       title,
@@ -42,10 +48,11 @@
       email,
       description,
       address,
+      imageUrl,
       contactEmail: email
     };
 
-    meetups = [...meetups, newMeetup];
+    meetups = [newMeetup, ...meetups];
     _editMode = null;
   }
 
