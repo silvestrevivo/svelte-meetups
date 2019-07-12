@@ -4,7 +4,9 @@
   import Button from "../UI/Button.svelte";
   import Modal from "../UI/Modal.svelte";
   import { notEmpty, isValidEmail } from "../helpers/validation";
-  import meetups from './meetups-store.js';
+  import meetups from "./meetups-store.js";
+
+  export let id = null;
 
   let title = "";
   let subtitle = "";
@@ -12,6 +14,20 @@
   let email = "";
   let description = "";
   let imageUrl = "";
+
+  if (id) {
+    const unsubscribe = meetups.subscribe(items => {
+      const selectedMeetup = items.find(i => i.id === id);
+      title = selectedMeetup.title;
+      subtitle = selectedMeetup.subtitle;
+      address = selectedMeetup.address;
+      email = selectedMeetup.contactEmail;
+      description = selectedMeetup.description;
+      imageUrl = selectedMeetup.imageUrl;
+    });
+
+    unsubscribe();
+  }
 
   const dispatch = createEventDispatcher();
 
@@ -39,8 +55,12 @@
       imageUrl,
       contactEmail: email
     };
-    meetups.addMeetup(meetupData);
-    dispatch('save');
+    if (id) {
+      meetups.updateMeetup(id, meetupData);
+    } else {
+      meetups.addMeetup(meetupData);
+    }
+    dispatch("save");
   }
 
   function cancel() {
