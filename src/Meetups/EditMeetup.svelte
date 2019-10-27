@@ -26,7 +26,7 @@
       imageUrl = selectedMeetup.imageUrl;
     });
 
-    unsubscribe();
+    unsubscribe(); // I unsubscribe just after fetching data from store
   }
 
   const dispatch = createEventDispatcher();
@@ -58,7 +58,25 @@
     if (id) {
       meetups.updateMeetup(id, meetupData);
     } else {
-      meetups.addMeetup(meetupData);
+      fetch("https://svelte-meetups-635c8.firebaseio.com/meetups.json", {
+        method: "POST",
+        body: JSON.stringify({ ...meetupData, isFavorite: false }),
+        headers: { "Content-Type": "application/json" }
+      })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error("An error occurred, please try again!");
+          }
+          return res.json();
+        })
+        .then(data => {
+          meetups.addMeetup({
+            ...meetupData,
+            isFavorite: false,
+            id: data.name
+          });
+        })
+        .catch(err => console.log(err));
     }
     dispatch("save");
   }
