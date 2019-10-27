@@ -16,7 +16,18 @@
   const dispatch = createEventDispatcher();
 
   function toggleFavorite() {
-    meetups.toogleFavorite(id);
+    fetch(`https://svelte-meetups-635c8.firebaseio.com/meetups/${id}.json`, {
+      method: "PATCH",
+      body: JSON.stringify({ isFavorite: !isFav }),
+      headers: { "Content-Type": "application/json" }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("An error occurred, please try again!");
+        }
+        meetups.toogleFavorite(id);
+      })
+      .catch(err => console.log(err));
   }
 </script>
 
@@ -81,7 +92,7 @@
 <article>
   <header>
     <h1>
-       {title}
+      {title}
       {#if isFav}
         <Badge>FAVORITE</Badge>
       {/if}
@@ -105,7 +116,7 @@
       mode="outline"
       color={isFav ? null : 'success'}
       on:click={toggleFavorite}>
-       {isFav ? 'Unfavorite' : 'Favorite'}
+      {isFav ? 'Unfavorite' : 'Favorite'}
     </Button>
     <Button type="button" on:click={() => dispatch('showdetails', id)}>
       Show Details

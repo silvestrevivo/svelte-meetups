@@ -30,7 +30,7 @@
           id: key
         });
       }
-      meetups.setMeetups(loadedMeetups);
+      meetups.setMeetups(loadedMeetups.reverse());
       // equivalent to reset the values fetching from the server
     })
     .catch(err => console.log(err));
