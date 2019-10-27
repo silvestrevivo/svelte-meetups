@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { scale } from "svelte/transition";
+  import { scale, fade } from "svelte/transition";
   import { flip } from "svelte/animate";
   import MeetupItem from "./MeetupItem.svelte";
   import MeetupFilter from "./MeetupFilter.svelte";
@@ -32,6 +32,10 @@
     justify-content: space-between;
   }
 
+  #no-meetups {
+    margin: 1rem;
+  }
+
   @media (min-width: 768px) {
     #meetups {
       grid-template-columns: repeat(2, 1fr);
@@ -44,19 +48,23 @@
   <Button on:click={() => dispatch('add')}>New meetup</Button>
 </section>
 <section id="meetups">
-  {#each filteredMeetups as meetup (meetup.id)}
-    <div animate:flip={{ duration: 200 }} transition:scale>
-      <MeetupItem
-        id={meetup.id}
-        title={meetup.title}
-        subtitle={meetup.subtitle}
-        imageUrl={meetup.imageUrl}
-        description={meetup.description}
-        email={meetup.contactEmail}
-        address={meetup.address}
-        isFav={meetup.isFavorite}
-        on:showdetails
-        on:edit />
-    </div>
-  {/each}
+  {#if filteredMeetups.length === 0}
+    <p id="no-meetups" in:fade={{ delay: 400 }}>No meetups found</p>
+  {:else}
+    {#each filteredMeetups as meetup (meetup.id)}
+      <div animate:flip={{ duration: 200 }} transition:scale>
+        <MeetupItem
+          id={meetup.id}
+          title={meetup.title}
+          subtitle={meetup.subtitle}
+          imageUrl={meetup.imageUrl}
+          description={meetup.description}
+          email={meetup.contactEmail}
+          address={meetup.address}
+          isFav={meetup.isFavorite}
+          on:showdetails
+          on:edit />
+      </div>
+    {/each}
+  {/if}
 </section>
