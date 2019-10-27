@@ -6,6 +6,7 @@
   import EditMeetup from "./Meetups/EditMeetup.svelte";
   import MeetupDetail from "./Meetups/MeetupDetail.svelte";
   import LoadingSpinner from "./UI/LoadingSpinner.svelte";
+  import Error from "./UI/Error.svelte";
   import meetups from "./Meetups/meetups-store.js";
 
   let _editMode;
@@ -32,8 +33,7 @@
       }
       meetups.setMeetups(loadedMeetups.reverse());
       // equivalent to reset the values fetching from the server
-    })
-    .catch(err => console.log(err));
+    });
 
   function savedMeetup(event) {
     _editMode = null;
@@ -59,6 +59,10 @@
     _editMode = "edit";
     _editedId = event.detail;
   }
+
+  function clearError() {
+    window.location.reload(true);
+  }
 </script>
 
 <style>
@@ -81,6 +85,8 @@
         on:showdetails={showDetails}
         on:edit={startEdit}
         on:add={() => (_editMode = 'edit')} />
+    {:catch error}
+      <Error message={error.message} on:cancel={clearError} />
     {/await}
   {:else if _page === 'details'}
     <MeetupDetail id={_id} on:close={closeDetails} />
